@@ -10,17 +10,19 @@ public class HomeFrame extends JFrame{
 		private JButton restaurant,view_comment,comment,schoolmeal,coupon,setup,login;
 		private JTextArea activities;
 		private JPanel selectpanel,showpanel,mainpanel,basepanel;
-		private LoginFrame loginframe;
+		private LoginFrame loginframe,loginagain;
 		private SetupFrame setupframe;
 		private JLabel title;
 		private boolean success;
 		Connection conn;
+		private String username,userpassword,id,mail;
+		private User user=new User();
 
 		public HomeFrame(Connection conn) {
 			this.conn=conn;
 			this.success=false;
 			setTitle("NCCU美食地圖");
-			setSize(500,350);
+			setSize(500,320);
 			createButton();
 			createTextArea();
 			createLayout();
@@ -50,30 +52,39 @@ public class HomeFrame extends JFrame{
 				}
 			});
 			schoolmeal=new JButton("SchoolMeal");
-//			coupon=new JButton("Coupon");
 			setup=new JButton("Setup");
 			setup.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
-					if(success!=true) {
-						JOptionPane.showMessageDialog(null,"Please login","Error",JOptionPane.ERROR_MESSAGE);
-					}else if(success==true) {
-						try {
-						setupframe=new SetupFrame(conn);
+					JOptionPane.showMessageDialog(null, "Please login again");
+					try {
+						loginagain=new LoginFrame(conn);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					}
+//					if(success!=true) {
+//						JOptionPane.showMessageDialog(null,"Please login","Error",JOptionPane.ERROR_MESSAGE);
+//					}else if(success==true) {
+//						try {
+//						setupframe=new SetupFrame(conn);
+//					} catch (SQLException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					}
 				}
 			});
 			login=new JButton("Login");
 			login.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
+					String name="";
+					String id="";
+					String pw="";
+					String mail="";
 					try {
 						loginframe=new LoginFrame(conn);
-//						setLogin(loginframe.getLogin());
+
 						setSuccess();
-//						login.setEnabled(false);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -81,17 +92,38 @@ public class HomeFrame extends JFrame{
 				}
 			});
 		}
-//		public void setLogin(boolean login) {
-//			this.success=login;
-//		}
+		public void setName(String name) {
+			this.username=name;
+		}
+		public String getName() {
+			return this.username;
+		}
+		public void setPW(String pw) {
+			this.userpassword=pw;
+		}
+		public String getPW() {
+			return this.userpassword;
+		}
 		public void setSuccess() {
 			this.success=true;
 		}
 		public boolean getLogin() {
 			return this.success;
 		}
+		public void setID(String id) {
+			this.id=id;
+		}
+		public String getID() {
+			return this.id;
+		}
+		public void setMail(String mail) {
+			this.mail=mail;
+		}
+		public String getMail() {
+			return this.mail;
+		}
 		public void createTextArea() {
-			activities=new JTextArea(12,30);
+			activities=new JTextArea(10,25);
 			activities.setText("活動/集英樓菜單");
 			activities.setEditable(false);
 			showpanel=new JPanel();

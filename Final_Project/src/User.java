@@ -1,30 +1,35 @@
 import java.util.ArrayList;
 public class User {
 
-	private ArrayList<String>name;
-	private ArrayList<Integer>ID;
-	private ArrayList<String>password;
-	private ArrayList<String>mail;
-
+	private String name;
+	private String id;
+	private String passw;
+	private String mail;
+	
 	public User() {
-		name=new ArrayList<String>();
-		ID=new ArrayList<Integer>();
-		password=new ArrayList<String>();
-		mail=new ArrayList<String>();
 	}
-	public void add(String n,int id,String pw,String m) {
-		name.add(n);
-		ID.add(id);
-		password.add(pw);
-		mail.add(m);	
+	public void addName(String name) {
+		this.name=name;
 	}
-	public ArrayList<String> getN(){
+	public String getName() {
 		return this.name;
 	}
-	public ArrayList<Integer> getID(){
-		return this.ID;
+	public void addID(String ID) {
+		this.id=ID;
 	}
-	public ArrayList<String> getPW(){
-		return this.password;
+	public String getID() {
+		return this.id;
+	}
+	public void setPW(String PW) {
+		this.passw=PW;
+	}
+	public String getPW() {
+		return this.passw;
+	}
+	public void setMail(String mail) {
+		this.mail=mail;
+	}
+	public String getMail() {
+		return this.mail;
 	}
 }

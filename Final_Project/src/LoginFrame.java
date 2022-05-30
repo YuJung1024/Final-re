@@ -5,17 +5,19 @@ import java.sql.*;
 import java.util.ArrayList;
 ;public class LoginFrame extends JFrame{
 
-	private String username,passw;
+	private String username,passw,id,mail;
 	private JLabel user,password;
 	private JTextField u,passwords;
 	private JButton login,enroll,forget;
 	private JPanel panel1,panel2,panel3,operatepanel;
 	private EnrollFrame enrollf;
-	private User ue=new User();
+	private User use;
+	private SetupFrame set,setf;
+
 	private boolean success;
 	Connection connect;
 	Statement stat,stat1;
-	private static ArrayList <String> namelist,pwlist,idlist;
+	private static ArrayList <String> namelist,pwlist,idlist,maillist;
 	
 	public LoginFrame(Connection conn )throws SQLException {
 		this.connect=conn;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 		namelist=new ArrayList<String>();
 		pwlist=new ArrayList<String>();
 		idlist=new ArrayList<String>();
+		maillist=new ArrayList<String>();
 	}
 	public void createLabel() {
 		user=new JLabel("Username");
@@ -43,6 +46,8 @@ import java.util.ArrayList;
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				String id="";
+				String mail="";
 				try {
 					stat=connect.createStatement();
 					String user=u.getText();
@@ -66,10 +71,34 @@ import java.util.ArrayList;
 								if(getPWlist().get(getNlist().indexOf(user)).equals(PW)) {
 									JOptionPane.showMessageDialog(null, "Welcome");
 									setLogin();
+									setVisible(false);
+									setName(user);
+									setPW(PW);
+									String s="SELECT UserID FROM personalInfo";
+									boolean has=stat.execute(s);
+									if(has==true) {
+										ResultSet r=stat.getResultSet();
+										showID(r);
+										id=(String)getIDlist().get(getNlist().indexOf(user));
+									}
+									String st="SELECT Email FROM personalInfo";
+									boolean hasre=stat.execute(st);
+									if(hasre==true) {
+										ResultSet rs=stat.getResultSet();
+										showMail(rs);
+										mail=(String)getMaillist().get(getNlist().indexOf(user));
+										
+									}
+									setf=new SetupFrame(connect,user,id,PW,mail);
+									setf.setVisible(true);
+									use=new User();
+									use.addName(user);
+									use.addID(id);
+									use.setPW(PW);
+									use.setMail(mail);
 									re.close();
 									result.close();
 									stat.close();
-									setVisible(false);
 								}else {
 									JOptionPane.showMessageDialog(null,"Password is wrong","Error",JOptionPane.ERROR_MESSAGE);
 								}
@@ -77,6 +106,9 @@ import java.util.ArrayList;
 						}else {
 							JOptionPane.showMessageDialog(null,"Please enroll before login or your name is wrong","Error",JOptionPane.ERROR_MESSAGE);
 						}
+						setID(id);
+						
+						setMail(mail);
 						}
 					}
 //					String query="SELECT Name FROM personalInfo WHERE Name=?";
@@ -119,6 +151,7 @@ import java.util.ArrayList;
 					e1.printStackTrace();
 				}
 			}
+			
 		});
 		enroll=new JButton("Enroll");
 		enroll.addActionListener(new ActionListener() {
@@ -150,8 +183,17 @@ import java.util.ArrayList;
 		operatepanel.add(panel3);
 		add(operatepanel);
 	}
+	public void setName(String name) {
+		this.username=name;
+	}
+	public void setPW(String pw) {
+		this.passw=pw;	
+	}
 	public String getName() {
 		return this.username;
+	}
+	public String getPW() {
+		return this.passw;
 	}
 	public void setLogin() {
 		this.success=true;
@@ -195,5 +237,29 @@ import java.util.ArrayList;
 	}
 	public ArrayList getIDlist() {
 		return this.idlist;
+	}
+	public void setID(String id) {
+		this.id=id;
+	}
+	public String getID() {
+		return this.id;
+	}
+	public static void showMail(ResultSet result)throws SQLException{
+		ResultSetMetaData metaData = result.getMetaData();
+		int columnCount = metaData.getColumnCount();
+		while (result.next()) {		
+			for (int i = 1; i <= columnCount; i++) {
+				maillist.add(result.getString(i));	
+		}
+	}
+	}
+	public ArrayList getMaillist() {
+		return this.maillist;
+	}
+	public void setMail(String mail) {
+		this.mail=mail;
+	}
+	public String getMail() {
+		return this.mail;
 	}
 }
